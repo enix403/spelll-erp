@@ -1,0 +1,16 @@
+.venv/
+.git/
+data/
+files/
+migrations/
+run/
+storage/*/*
+tests/
+**/node_modules/
+
+app/frontend/reactapp/dist/
+
+**/*.pyc
+**/__pycache__
+act
+.env

@@ -1,0 +1,104 @@
+{% extends 'main/basev.html' %}
+{% block title %}Admission Summary Sheet{% endblock %}
+
+{% block sn-report-adm-sum %}active{% endblock %}
+
+
+{% block content %}
+
+{% block css %}
+<style>
+.summary thead th {
+    white-space: nowrap !important;
+    text-align: center;
+    vertical-align: middle;
+}
+.summary tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+</style>
+{% endblock css %}
+
+<h6 class="bp3-heading mb-md">Intermediate Admissions</h6>
+
+<div class="table-responsive">
+    <table class="summary table table-bordered mg-b-0">
+        <thead>
+            <tr>
+                <th>Discipline</th>
+                <th>Average Income Per Student</th>
+                <th>Total Admissions</th>
+                <th>Total Payable</th>
+                <th>Total Paid</th>
+                <th>Total Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in inter.rows %}
+            <tr>
+                <td><strong>{{row.name}}</strong></td>
+                <td>{{row.avg}}</td>
+                <td>{{row.count}}</td>
+                <td>{{row.payable}}</td>
+                <td>{{row.paid}}</td>
+                <td>{{row.balance}}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td><strong>Grand Total</strong></td>
+                <td style="color:rgb(191, 38, 186)"><strong>{{inter.stats.avg}}</strong></td>
+                <td style="color:rgb(16, 107, 163)"><strong>{{inter.stats.count}}</strong></td>
+                <td style="color:rgb(191, 115, 38)"><strong>{{inter.stats.payable}}</strong></td>
+                <td style="color:rgb(13, 128, 80)"><strong>{{inter.stats.paid}}</strong></td>
+                <td style="color:rgb(194, 48, 48)"><strong>{{inter.stats.balance}}</strong></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div><!-- table-responsive -->
+
+<hr>
+
+<h6 class="bp3-heading mb-md">B.S Admissions</h6>
+
+
+<div class="table-responsive">
+    <table class="summary table table-bordered mg-b-0">
+        <thead>
+            <tr>
+                <th>Discipline</th>
+                <th>Average Income Per Student</th>
+                <th>Total Admissions</th>
+                <th>Total Payable</th>
+                <th>Total Paid</th>
+                <th>Total Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in bs.rows %}
+            <tr>
+                <td><strong>{{row.name}}</strong></td>
+                <td>{{row.avg}}</td>
+                <td>{{row.count}}</td>
+                <td>{{row.payable}}</td>
+                <td>{{row.paid}}</td>
+                <td>{{row.balance}}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td><strong>Grand Total</strong></td>
+                <td style="color:rgb(191, 38, 186)"><strong>{{bs.stats.avg}}</strong></td>
+                <td style="color:rgb(16, 107, 163)"><strong>{{bs.stats.count}}</strong></td>
+                <td style="color:rgb(191, 115, 38)"><strong>{{bs.stats.payable}}</strong></td>
+                <td style="color:rgb(13, 128, 80)"><strong>{{bs.stats.paid}}</strong></td>
+                <td style="color:rgb(194, 48, 48)"><strong>{{bs.stats.balance}}</strong></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div><!-- table-responsive -->
+
+{% endblock content %}

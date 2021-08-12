@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP</title>
+
+    <link href="{% static 'css/fonts.css' %}" rel="stylesheet" />
+
+    <link href="{% static 'css/vendor/normalize.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'lib/@blueprintjs/core/lib/css/blueprint.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'lib/@blueprintjs/icons/lib/css/blueprint-icons.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/vendor/basev.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/vendor/grid.min.css' %}" rel="stylesheet" />
+
+
+    <link href="{% static 'css/sidebar.css' %}" rel="stylesheet">
+    <link href="{% static 'css/app.css' %}" rel="stylesheet">
+
+    {% block css %}
+    {% endblock css %}
+
+</head>
+
+<body class="toggle-siddebar">
+
+    <div class="sidebar">
+
+        <div class="sidebar-home">
+            <a href="/">
+                {% comment %} <img style="width:100%;height: 100%" src="{% static 'img/logo.png' %}" alt="">
+                {% endcomment %}
+            </a>
+        </div>
+
+        <div class="sidebar-body">
+            <ul class="nav nav-sidebar">
+                <li class="nav-label">
+                    <label>Navigation</label>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'manage' %}"
+                        class="nav-link {% block sn-manage %}{% endblock %}">
+                        <span class="bp3-icon-large bp3-icon-home nav-list-icon"></span>
+                        Manage
+                    </a>
+                </li>
+
+            </ul>
+
+            <hr>
+
+            <ul class="nav nav-sidebar">
+                <li class="nav-label">
+                    <label>Reporting</label>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'report-adm-summary' %}"
+                        class="nav-link {% block sn-report-adm-sum %}{% endblock %}">
+                        <span class="bp3-icon-large bp3-icon-layout-hierarchy nav-list-icon"></span>
+                        Adm Summary
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'report-student-ledger' %}"
+                        class="nav-link {% block sn-report-ledger %}{% endblock %}">
+                        <span class="bp3-icon-large bp3-icon-layout-hierarchy nav-list-icon"></span>
+                        Student Ledger
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div class="header">
+            <div class="header-left">
+                <a href="" class="burger-menu link-no-underline">
+                    <span class="bp3-icon-large bp3-icon-menu"></span>
+                </a>
+            </div>
+            {% comment %}
+            <div class="header-right">
+                <button class="bp3-button bp3-outlined bp3-intent-danger bp3-fill"
+                    onclick="">
+                    <span class="bp3-button-text">Logout</span>
+                    <span class="bp3-icon bp3-icon-log-out"></span>
+                </button>
+            </div>
+            {% endcomment %}
+        </div>
+
+
+        <div class="content-title">
+            <span class="title-text">
+                {% block title %}{% endblock %}
+            </span>
+
+            {% block title_extra %}{% endblock %}
+
+            {% if messages %}
+            {% for message in messages %}
+
+            <div class="app-alert bp3-callout
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} bp3-icon-error bp3-intent-danger
+                        {% endif %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} bp3-icon-tick-circle bp3-intent-success
+                        {% endif %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} bp3-icon-warning-sign bp3-intent-warning
+                        {% endif %}
+                        " style="margin:10px 0;">
+
+                <h4 class="bp3-heading">
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} Error {% endif %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} Success {% endif %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} Warning {% endif %}
+                </h4>
+                {{ message }}
+            </div>
+
+            {% endfor %}
+            {% endif %}
+
+            <hr>
+
+        </div>
+
+        <div class="content-body">
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </div>
+
+
+    <script src="{% static 'js/htmlapp.js' %}"></script>
+
+    {% block js %}
+    {% endblock js %}
+
+</body>
+
+</html>

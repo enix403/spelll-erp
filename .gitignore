@@ -1,0 +1,16 @@
+/.venv/
+/data/
+/migrations/
+/run/
+
+# keep the empty folder, but not the files
+/storage/**/*
+!/storage/**/.gitkeep
+
+*.pyc
+__pycache__/
+node_modules/
+/.env
+
+# You can `ln -s .git/info/exclude ./.user.gitignore` and have your own private .gitignore
+.user.gitignore

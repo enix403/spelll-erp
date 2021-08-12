@@ -1,0 +1,115 @@
+{% extends 'main/basev.html' %}
+{% block title %}Student Ledger{% endblock %}
+
+{% block sn-report-ledger %}active{% endblock %}
+
+{% block title_extra %}
+<span
+    style="float: right; margin-left: 10px"
+    class="bp3-tag bp3-large bp3-minimal bp3-intent-danger"
+>
+    <strong>Total Balance:&nbsp;</strong>
+    {{total_stats.balance}}
+</span>
+
+<span 
+    style="float: right; margin-left: 10px"
+    class="bp3-tag bp3-large bp3-minimal bp3-intent-success"
+>
+    <strong>Total Paid:&nbsp;</strong>
+    {{total_stats.paid}}
+</span>
+
+<span 
+    style="float: right; margin-left: 10px"
+    class="bp3-tag bp3-large bp3-minimal bp3-intent-warning"
+>
+    <strong>Total Payable:&nbsp;</strong>
+    {{total_stats.payable}}
+</span>
+
+<span 
+    style="float: right; margin-left: 10px"
+    class="bp3-tag bp3-large bp3-minimal bp3-intent-primary"
+>
+    <strong>Total Admissions:&nbsp;</strong>
+    {{total_stats.count}}
+</span>
+
+<span
+    style="float: right; margin-left: 10px"
+    class="bp3-tag bp3-large bp3-minimal"
+>
+    <strong>Avg Income:&nbsp;</strong>
+    {{total_stats.avg}}
+</span>
+{% endblock %}    
+
+
+{% block css %}
+<style>
+#ledger thead th {
+    white-space: nowrap !important;
+    text-align: center;
+    vertical-align: middle;
+}
+#ledger tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+</style>
+{% endblock css %}
+
+{% block content %}
+
+<div class="table-responsive">
+    <table id="ledger" class="table table-bordered mg-b-0">
+        <thead>
+            <tr>
+                <th rowspan="2">Name</th>
+                <th rowspan="2">Father Name</th>
+                <th rowspan="2">Contact No</th>
+                <th rowspan="2">Discipline</th>
+
+                <th colspan="2">Matric Result</th>
+
+                <th rowspan="2">Full Fee</th>
+
+                <th colspan="3">Discount</th>
+
+                <th rowspan="2">Total Package</th>
+                <th rowspan="2">Paid</th>
+                <th rowspan="2">Balance</th>
+            </tr>
+            <tr>
+                <th>Marks</th>
+                <th>%age</th>
+
+                <th>Policy</th>
+                <th>Discretionary</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for st in students %}
+            <tr>
+                <td>{{st.name}}</td>
+                <td>{{st.father_name}}</td>
+                <td>{{st.phone}}</td>
+                <td>{{st.disp}}</td>
+                <td>{{st.marks}}</td>
+                <td>{{st.percent}}</td>
+                <td>{{st.fee}}</td>
+                <td>{{st.disc.policy}}</td>
+                <td>{{st.disc.discretion}}</td>
+                <td>{{st.disc.total}}</td>
+                <td>{{st.final_package}}</td>
+                <td>{{st.paid}}</td>
+                <td>{{st.balance}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div><!-- table-responsive -->
+
+{% endblock content %}

@@ -1,0 +1,9 @@
+root=true
+
+[*.sh]
+; crlf line endings do not work in docker under windows
+end_of_line = lf
+
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 4
