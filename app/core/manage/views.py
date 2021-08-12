@@ -74,7 +74,12 @@ class Action_CreateStation(View):
         name = bag.get('name', None)
 
         if not name:
-            return HttpResponse("Please enter a name")
+            raise UIException("Invalid name")
+
+        name = name.strip()
+
+        if Station.objects.filter(name=name).exists():
+            raise UIException(f"Station '{name}' already exists")
 
         make_station(name)
         messages.success(req, "Station added successfully")
