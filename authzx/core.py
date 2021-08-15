@@ -3,8 +3,11 @@ from authzx.traits import AgentTraitCollection, TraitSpec
 from authzx.actions import Allow, Deny
 
 class AuthorizationPolicy:
-    def permits(self, permission, resource_context, traits: AgentTraitCollection):
-        """"""
+    def permits(self, permission, resource_context, traits: AgentTraitCollection) -> bool:
+        """
+            Returns `True` if `permission` is granted according to the given traits and context,
+            `False` otherwise
+        """
 
 class AuthzGate:
     def __init__(self, policy: AuthorizationPolicy, traits: AgentTraitCollection):
