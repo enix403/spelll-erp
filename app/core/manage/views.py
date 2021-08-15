@@ -45,8 +45,6 @@ def index(req):
     })
 
 
-
-
 # =========================== NEW COLLEGE ===========================
 class Action_CreateCollege(View):
     def post(self, req):
@@ -54,14 +52,15 @@ class Action_CreateCollege(View):
         name = bag.get('name', None)
 
         if not name:
-            return HttpResponse("Please enter a name")
+            raise UIException("Enter a valid name")
 
-        station = fetch_model_clean(Station, bag.get('station_id', 0))
+        try:
+            station = Station.objects.get(pk=bag.get('station_id'))
+        except Station.DoesNotExist:
+            raise UIException('Station not found')
 
         make_college(name, station)
-
         messages.success(req, "College added successfully")
-
         return redirect_back(req)
 
 
@@ -74,7 +73,7 @@ class Action_CreateStation(View):
         name = bag.get('name', None)
 
         if not name:
-            raise UIException("Invalid name")
+            raise UIException("Enter a valid name")
 
         name = name.strip()
 
@@ -83,5 +82,4 @@ class Action_CreateStation(View):
 
         make_station(name)
         messages.success(req, "Station added successfully")
-
         return redirect_back(req)

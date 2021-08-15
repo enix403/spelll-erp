@@ -22,16 +22,28 @@ services:
             RUN_TYPE: ${WEB_RUN_TYPE}
 
         ports:
-            - "${WEB_SERVER_PORT}:6000"
+            - "127.0.0.1:${EXPOSE_WEB_SERVER_PORT}:6000"
 
         depends_on:
             - db
 
     db:
-        image: mysql:8
+        image: postgres:13
+        ports:
+            - "127.0.0.1:${EXPOSE_DB_PORT}:5432"
         volumes:
-            - ./data/mysql:/var/lib/mysql
-        command: --default-authentication-plugin=mysql_native_password
+            - ./data/postgresql:/var/lib/postgresql
         environment:
-            MYSQL_DATABASE: ${DB_NAME}
-            MYSQL_ROOT_PASSWORD: ${DB_PASS}
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: ${DB_PASS}
+            POSTGRES_DB: ${DB_NAME}
+            PGDATA: /var/lib/postgresql/pgdata
+
+    # db:
+    #     image: mysql:8
+    #     volumes:
+    #         - ./data/mysql:/var/lib/mysql
+    #     command: --default-authentication-plugin=mysql_native_password
+    #     environment:
+    #         MYSQL_DATABASE: ${DB_NAME}
+    #         MYSQL_ROOT_PASSWORD: ${DB_PASS}

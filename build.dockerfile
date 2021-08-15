@@ -14,6 +14,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip pip install -r requirem
 copy config config
 copy scripts scripts
 copy app app
+copy authzx authzx
 
 
 cmd ["/bin/bash", "./scripts/init.sh"]

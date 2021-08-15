@@ -1,9 +1,0 @@
-{
-    "venvPath": ".",
-    "venv": ".venv",
-    "reportGeneralTypeIssues": false,
-    "reportOptionalMemberAccess": false,
-    "executionEnvironments": [
-        {"root": "."}
-    ]
-}

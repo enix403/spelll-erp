@@ -12,5 +12,5 @@ __pycache__/
 node_modules/
 /.env
 
-# You can `ln -s .git/info/exclude ./.user.gitignore` and have your own private .gitignore
+# You can `ln -s ./.git/info/exclude ./.user.gitignore` and have your own private .gitignore
 .user.gitignore

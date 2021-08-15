@@ -2,7 +2,7 @@ from app.bootstrap.configmanager import ConfigManager
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'USER': ConfigManager.get('db.user'),
         'NAME': ConfigManager.get('db.name'),
         'PASSWORD': ConfigManager.get('db.pass'),
