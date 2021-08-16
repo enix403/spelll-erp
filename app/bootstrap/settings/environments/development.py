@@ -3,7 +3,8 @@ from app.utils import resolve_root
 
 from app.bootstrap.settings.components.base import (
     INSTALLED_APPS,
-    STATICFILES_DIRS
+    STATICFILES_DIRS,
+    REST_FRAMEWORK
 )
 from app.bootstrap.settings.components.middleware import (
     MIDDLEWARE
@@ -38,3 +39,11 @@ st_dist_dir = resolve_root('app/frontend/reactapp/dist/static')
 st_build_dir = resolve_root('app/frontend/reactapp/build/static')
 STATICFILES_DIRS.extend(tuple(d for d in [st_build_dir, st_dist_dir] if os.path.isdir(d)))
 
+
+REST_FRAMEWORK = {
+    **REST_FRAMEWORK,
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}

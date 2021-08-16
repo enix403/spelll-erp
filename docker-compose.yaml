@@ -9,6 +9,7 @@ services:
         environment:
             APP_DEBUG: 'false'
             APP_SECRET_KEY: ${SECRET_KEY}
+            APP_TOKEN_KEY: ${TOKEN_KEY}
             
             DB_NAME: ${DB_NAME}
             DB_PASS: ${DB_PASS}

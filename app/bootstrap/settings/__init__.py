@@ -7,6 +7,7 @@ environment = 'development' if ConfigManager.get_bool('runtime.debug') else 'pro
 setting_files = [
     'components/base.py',
     'components/db.py',
+    'components/monkeypatchmigrations.py',
     'components/middleware.py',
     'components/templates.py',
     

@@ -13,10 +13,11 @@ version = '1.0.0'
 # conflict with those of other branches.
 # Note: This must be valid python identifier name
 # Example: 'master' or 'new_feature'
-migration_branch_name = 'master'
+migration_branch_name = 'feature__api'
 
 # A unique secret key
 secret_key = "$APP_SECRET_KEY"
+token_key = "$APP_TOKEN_KEY"
 
 [db]
 name = "$DB_NAME"

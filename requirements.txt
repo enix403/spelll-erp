@@ -11,6 +11,7 @@ passlib==1.7.4
 python-dateutil==2.8.2
 envtoml==0.1.2
 psycopg2==2.9.1
+pyjwt==2.1.0
 # toml==0.10.2              # Installed as dependency for envtoml
 # asgiref==3.4.1            # Installed as dependency for django
 # beautifulsoup4==4.9.3     # Installed as dependency for django-htmlmin

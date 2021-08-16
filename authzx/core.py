@@ -63,9 +63,6 @@ class AclAuthorizationPolicy(AuthorizationPolicy):
         except AttributeError:
             return False
 
-        if callable(acl):
-            acl = acl()
-
         allowed = False
 
         for (action, trait, perms) in acl:

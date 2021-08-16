@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 
+from app.utils import httpcodes
+
 class UIException(Exception):
     def __init__(self, user_msg="An error occured", route_name=None, route_args=[], query_params=None):
         self.user_msg = user_msg
@@ -17,32 +19,42 @@ class UIException(Exception):
                 # TODO: error out
                 self.query_params = ''
 
-class HttpErrorCodeResponse(Exception):
-    def __init__(self, code, msg="Error"):
+class HttpException(Exception):
+    def __init__(self, msg, code, data=None):
         self.code = code
         self.msg = msg
+        self.data = data
 
-# Common errors
-class HttpBadRequest(HttpErrorCodeResponse):
+# Common exceptions
+class HttpExceptionBadRequest(HttpException):
     def __init__(self):
-        super().__init__(400, 'Bad Request')
+        super().__init__('Bad Request', httpcodes.HTTP_400_BAD_REQUEST)
 
-class HttpUnauthorized(HttpErrorCodeResponse):
+class HttpExceptionUnauthorized(HttpException):
     def __init__(self):
-        super().__init__(401, 'Not Authorized')
+        super().__init__('Not Authorized', httpcodes.HTTP_401_UNAUTHORIZED)
 
-class HttpPermissionDenied(HttpErrorCodeResponse):
+class HttpExceptionPermissionDenied(HttpException):
     def __init__(self):
-        super().__init__(403, 'Permission Denied')
+        super().__init__('Permission Denied', httpcodes.HTTP_403_FORBIDDEN)
 
-class HttpNotFound(HttpErrorCodeResponse):
+class HttpExceptionNotFound(HttpException):
     def __init__(self):
-        super().__init__(404, 'Not Found')
+        super().__init__('Not Found', httpcodes.HTTP_404_NOT_FOUND)
 
-class HttpCSRFFailure(HttpErrorCodeResponse):
+class HttpExceptionCSRFFailure(HttpException):
     def __init__(self):
-        super().__init__(403, 'CSRF Failure')
+        super().__init__('CSRF Failure', httpcodes.HTTP_403_FORBIDDEN)
 
-class HttpInternalServerError(HttpErrorCodeResponse):
+class HttpExceptionInternalServerError(HttpException):
     def __init__(self):
-        super().__init__(500, 'Internal Server Error')
+        super().__init__('Internal Server Error', httpcodes.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ApiException(HttpException):
+    def __init__(self, msg, code=httpcodes.HTTP_422_UNPROCESSABLE_ENTITY, data={}):
+        super().__init__(msg, code, data)
+
+class ApiExceptionNotFound(ApiException):
+    def __init__(self):
+        super().__init__("HTTP 404 - Resource not found", code=httpcodes.HTTP_404_NOT_FOUND, data={})

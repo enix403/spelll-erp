@@ -13,7 +13,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'rest_framework',
+    'rest_framework',
     'app.appconfig.AppConfig',
 ]
 
@@ -39,3 +39,11 @@ STATICFILES_DIRS = [
 INTERNAL_IPS = [
     '*'
 ]
+
+
+# ========================================== Third Party ==========================================
+REST_FRAMEWORK = {
+    'UNAUTHENTICATED_USER': None,
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
+}

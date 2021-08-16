@@ -1,10 +1,12 @@
+from typing import ClassVar
+
 import envtoml
 from app.utils import resolve_root
 
 _CONFIG_FILE_PATH = resolve_root('config/app.toml')
 
 class ConfigManager:
-    _config_dict = None # type: dict
+    _config_dict: ClassVar[dict]
 
     @classmethod
     def load_config(cls):        

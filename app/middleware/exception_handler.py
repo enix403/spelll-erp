@@ -1,16 +1,18 @@
-from django.http import HttpRequest
-from django.shortcuts import render, redirect, reverse
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib import messages
 
 from app.exceptions import (
+    ApiException,
     UIException,
-    HttpErrorCodeResponse,
+    HttpException,
 
-    HttpNotFound,
-    HttpBadRequest,
-    HttpPermissionDenied,
-    HttpCSRFFailure,
-    HttpInternalServerError
+    HttpExceptionNotFound,
+    HttpExceptionBadRequest,
+    HttpExceptionPermissionDenied,
+    HttpExceptionCSRFFailure,
+    HttpExceptionInternalServerError
 )
 
 from app.utils.request_handling import redirect_back
@@ -24,8 +26,20 @@ class ExceptionHandlerMiddleware:
         return self.get_response(req)
 
     def process_exception(self, request: HttpRequest, exp: Exception):
-        if isinstance(exp, HttpErrorCodeResponse):
+
+        if isinstance(exp, ApiException):
+            response = JsonResponse({
+                'type': 'error',
+                'payload': exp.data,
+                'message': exp.msg 
+            }, status=exp.code)
+
+            return response
+
+        # Note the ordering of if-elif statements. ApiException itself is a subclass of HttpException
+        elif isinstance(exp, HttpException):
             return self._process_exception_generic(request, exp)
+
         elif isinstance(exp, UIException):
             messages.error(request, exp.user_msg)
 
@@ -41,7 +55,7 @@ class ExceptionHandlerMiddleware:
         return None
 
     @classmethod
-    def _process_exception_generic(cls, request: HttpRequest, exp: HttpErrorCodeResponse):
+    def _process_exception_generic(cls, request: HttpRequest, exp: HttpException):
         return render(request, 'main/errors/generic.html', {
             "code": exp.code,
             "msg": exp.msg
@@ -49,21 +63,21 @@ class ExceptionHandlerMiddleware:
 
     @classmethod
     def delegate_error_handler_400(cls, request, *args, **kwargs):
-        return cls._process_exception_generic(request, HttpBadRequest())
+        return cls._process_exception_generic(request, HttpExceptionBadRequest())
 
     @classmethod
     def delegate_error_handler_403(cls, request, *args, **kwargs):
-        return cls._process_exception_generic(request, HttpPermissionDenied())
+        return cls._process_exception_generic(request, HttpExceptionPermissionDenied())
 
     @classmethod
     def delegate_error_handler_404(cls, request, *args, **kwargs):
-        return cls._process_exception_generic(request, HttpNotFound())
+        return cls._process_exception_generic(request, HttpExceptionNotFound())
 
     @classmethod
     def delegate_error_handler_500(cls, request, *args, **kwargs):
-        return cls._process_exception_generic(request, HttpInternalServerError())
+        return cls._process_exception_generic(request, HttpExceptionInternalServerError())
 
     @classmethod
     def delegate_error_handler_csrf(cls, request, *args, **kwargs):
-        return cls._process_exception_generic(request, HttpCSRFFailure())
+        return cls._process_exception_generic(request, HttpExceptionCSRFFailure())
 
