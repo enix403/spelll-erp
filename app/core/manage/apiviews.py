@@ -1,10 +1,11 @@
-from typing import Any, Type
+from app.utils import AclContext
 from authzx.actions import Allow
 
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 
 from app.core.authentication.traits import TR
+from app.core.authentication.helpers import ContextGenerator
 from app.core.authentication import permissions
 
 from app.exceptions import ApiException, ApiExceptionNotFound
@@ -21,11 +22,11 @@ class StationSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
 
-class StationContext:
-    __acl__ = [
+class StationContext(ContextGenerator):
+    acl = [
         (
             Allow,
-            TR.Everyone,
+            TR.Authenticated,
             {'read'}
         ),
         (
@@ -35,11 +36,17 @@ class StationContext:
         )
     ]
 
+    @classmethod
+    def generate(cls, request):
+        return cls
+
+_global_station_context_gen = StationContext()
+
 @api_view(['GET'])
 @permissions.require(
     permissions.ApiPermissionGate, 
     'read', 
-    lambda req: StationContext
+    _global_station_context_gen
 )
 def station_list(request: ApiRequest, format=None):
     """
@@ -54,7 +61,7 @@ def station_list(request: ApiRequest, format=None):
 @permissions.require(
     permissions.ApiPermissionGate, 
     'create', 
-    lambda req: StationContext
+    _global_station_context_gen
 )
 def station_create(request: ApiRequest, format=None):
     name = request.data.get('name', '').strip()
@@ -81,7 +88,7 @@ def station_create(request: ApiRequest, format=None):
 @permissions.require(
     permissions.ApiPermissionGate, 
     'update', 
-    lambda req: StationContext
+    _global_station_context_gen
 )
 def station_update(request: ApiRequest, station_id: int):
     name = request.data.get('name', '').strip()

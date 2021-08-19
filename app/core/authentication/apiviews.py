@@ -13,7 +13,7 @@ from .token import issue_token, decode_token
 
 def new_access_token(userid):
     return issue_token({
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=15),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
         'jti': str(uuid.uuid4()),
         'userid': userid,
         'tk_type': 'acs'
@@ -56,6 +56,7 @@ def login(request: ApiRequest, format=None) -> ApiResponse:
             'refresh': ref_token 
         }
     })
+
 
 @api_view(['POST'])
 def get_access_token(request: ApiRequest):

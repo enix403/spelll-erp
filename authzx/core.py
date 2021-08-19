@@ -57,9 +57,8 @@ def _resolve_control(root_node: TraitSpec, traits: AgentTraitCollection):
 
 class AclAuthorizationPolicy(AuthorizationPolicy):
     def permits(self, required_permission, resource_context, agent_traits: AgentTraitCollection):
-        acl = []
         try:
-            acl = resource_context.__acl__
+            acl = resource_context.acl
         except AttributeError:
             return False
 

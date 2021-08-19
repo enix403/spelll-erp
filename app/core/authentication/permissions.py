@@ -1,4 +1,4 @@
-from typing import Any, Callable, ClassVar, Optional, Type
+from typing import Any, ClassVar, Optional, Type
 from functools import wraps
 
 from authzx.core import AclAuthorizationPolicy, AuthorizationPolicy, AuthzGate
@@ -8,8 +8,8 @@ from app.typehints import ApiRequest
 from app.models.auth import AppUser
 from app.utils import httpcodes, to_int
 
+from .helpers import ContextGenerator
 from .token import decode_token
-
 from .traits import SimpleTraitCollection
 
 class PermissionGate:
@@ -67,14 +67,12 @@ class ApiPermissionGate(PermissionGate):
             return None
 
 
-ContextGenerator = Callable[[Any], Any]
 
-
-def require(gate: Type[PermissionGate], perm: str, context: ContextGenerator):
+def require(gate: Type[PermissionGate], perm: str, context_gen: ContextGenerator):
     def wrapper(func):
         @wraps(func)
         def _f(request, *args, **kwargs):
-            gate(request).require(perm, context(request))
+            gate(request).require(perm, context_gen.generate(request))
             return func(request, *args, **kwargs)
 
         return _f
@@ -82,11 +80,11 @@ def require(gate: Type[PermissionGate], perm: str, context: ContextGenerator):
     return wrapper
 
 
-def require_all(gate: Type[PermissionGate], perms: str, context: ContextGenerator):
+def require_all(gate: Type[PermissionGate], perms: str, context_gen: ContextGenerator):
     def wrapper(func):
         @wraps(func)
         def _f(request, *args, **kwargs):
-            gate(request).require_all(perms, context(request))
+            gate(request).require_all(perms, context_gen.generate(request))
             return func(request, *args, **kwargs)
 
         return _f
@@ -94,11 +92,11 @@ def require_all(gate: Type[PermissionGate], perms: str, context: ContextGenerato
     return wrapper
 
 
-def require_one(gate: Type[PermissionGate], perms: str, context: ContextGenerator):
+def require_one(gate: Type[PermissionGate], perms: str, context_gen: ContextGenerator):
     def wrapper(func):
         @wraps(func)
         def _f(request, *args, **kwargs):
-            gate(request).require_one(perms, context(request))
+            gate(request).require_one(perms, context_gen.generate(request))
             return func(request, *args, **kwargs)
 
         return _f

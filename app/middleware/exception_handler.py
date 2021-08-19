@@ -20,7 +20,6 @@ from app.utils.request_handling import redirect_back
 class ExceptionHandlerMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-        self.handler_cache = {}
 
     def __call__(self, req):
         return self.get_response(req)
