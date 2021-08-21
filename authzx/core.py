@@ -1,4 +1,4 @@
-from typing import Container, cast
+from typing import Container, Iterable, cast
 from authzx.traits import AgentTraitCollection, TraitSpec
 from authzx.actions import Allow, Deny
 
@@ -9,24 +9,35 @@ class AuthorizationPolicy:
             `False` otherwise
         """
 
+    def all_permissions(self, resource_context, traits: AgentTraitCollection) -> Iterable:
+        """
+            Returns a list of all permissions granted to the user according to the given traits and context
+        """
+
 class AuthzGate:
     def __init__(self, policy: AuthorizationPolicy, traits: AgentTraitCollection):
-        self.policy = policy
-        self.traits = traits
+        self._policy = policy
+        self._traits = traits
+
+    def get_policy(self):
+        return self._policy
+
+    def get_traits(self):
+        return self._traits
 
     def allowed(self, perm, context):
-        return self.policy.permits(perm, context, self.traits)
+        return self._policy.permits(perm, context, self._traits)
 
     def allowed_one(self, perms, context):
         for perm in perms:
-            if self.policy.permits(perm, context, self.traits):
+            if self._policy.permits(perm, context, self._traits):
                 return True
 
         return False
 
     def allowed_all(self, perms, context):
         for perm in perms:
-            if not self.policy.permits(perm, context, self.traits):
+            if not self._policy.permits(perm, context, self._traits):
                 return False
 
         return True
@@ -77,3 +88,26 @@ class AclAuthorizationPolicy(AuthorizationPolicy):
                     allowed = action is Allow
 
         return allowed
+
+    def all_permissions(self, resource_context, agent_traits: AgentTraitCollection):
+        try:
+            acl = resource_context.acl
+        except AttributeError:
+            return []
+
+        all_perms = set()
+
+        for (action, trait, perms) in acl:
+            assert (action is Allow or action is Deny), f"Invalid action: {action}"
+            if isinstance(trait, TraitSpec):
+                passed = _resolve_control(trait, agent_traits)
+            else:
+                passed = agent_traits.has_trait(trait)
+
+            if passed:
+                if action == Allow:
+                    all_perms.update(perms)
+                else:
+                    all_perms.difference_update(perms)
+            
+        return all_perms

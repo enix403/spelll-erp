@@ -17,11 +17,12 @@ DEBUG = True
 
 INSTALLED_APPS.extend([
     # 'silk',
+    "corsheaders",
     'debug_toolbar',
     'django_extensions',
 ])
 
-# MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 MIDDLEWARE.extend([
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ])
@@ -54,3 +55,5 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ]
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

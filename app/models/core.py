@@ -2,7 +2,9 @@ from __future__ import annotations
 from django.db import models
 from . import fields
 
-from typing import ClassVar, TypeVar, Generic
+from typing import TYPE_CHECKING, ClassVar, TypeVar, Generic
+if TYPE_CHECKING:
+    from .sectioning import Section
 
 T = TypeVar('T', bound='BaseModel')
 
@@ -26,6 +28,7 @@ class College(BaseModel['College']):
         
     name = models.CharField(max_length=20, db_column="name")
     station = fields.make_fk(Station, "station_id", 'colleges')
+    sections: models.Manager[Section]
 
 class Discipline(BaseModel['Discipline']):
     class Meta:

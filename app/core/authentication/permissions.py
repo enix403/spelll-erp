@@ -20,6 +20,12 @@ class PermissionGate:
         self.user = self._load_user(request)
         self._gate = AuthzGate(self._authz_policy, SimpleTraitCollection(self.user))
 
+    def get_user(self):
+        return self.user
+
+    def all_permissions(self, context):
+        return self._gate.get_policy().all_permissions(context, self._gate.get_traits())
+
     def _load_user(self, request) -> Optional[AppUser]:
         """ Load and return the user object from database or return None if not authenticated"""
 

@@ -45,7 +45,7 @@ class ExceptionHandlerMiddleware:
             if exp.route_name is None:
                 # Note the exp.query_params are ignored here (i.e if redirecting back) because if you
                 # are redirecting 'back' in the first place, you do not know where it will redirect to
-                # and hence cannot figure out in advance the suitable query params to send  
+                # and hence cannot figure out in advance the suitable query params to send
                 return redirect_back(request)
             else:
                 # exp.query_params includes the trailing question mark "?" if it is not empty

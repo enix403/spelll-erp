@@ -14,6 +14,10 @@ class AppUser(BaseModel['AppUser']):
     password_hash = models.CharField(max_length=200)
     invalidate = fields.PositiveTinyIntegerField(default=0)
 
+    auth_role = models.CharField(max_length=20)
+    staff_role = models.CharField(max_length=20)
+    college_id = models.PositiveIntegerField()
+
     @classmethod
     def make(cls, name, username, password):
         user = cls()

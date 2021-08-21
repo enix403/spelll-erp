@@ -1,6 +1,9 @@
 import pathlib
 from collections import namedtuple
 
+from authzx.actions import Allow
+from authzx.traits import TraitSpec
+
 __BASE_DIR = pathlib.Path(__file__).parent.parent.parent
 
 def resolve_root(relpath: str='.') -> str:
@@ -16,9 +19,3 @@ def to_int(num, default = 0) -> int:
         return int(num)
     except:
         return default
-
-AclContext = namedtuple('AclContext', ['acl'])
-
-# class AclContext(object):
-#     def __init__(self, acl):
-#         self.__acl__ = acl
