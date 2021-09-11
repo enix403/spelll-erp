@@ -15,7 +15,7 @@ services:
             DB_PASS: ${DB_PASS}
             DB_USER: root
             DB_HOST: db
-            DB_PORT: 3306
+            DB_PORT: 5432
 
             FORCE_SERVE_STATIC_FILES: ${FORCE_SERVE_STATIC_FILES}
 

@@ -26,7 +26,8 @@ urlpatterns = [
         path('section/<int:section_id>/update/', section_views.section_update),
 
         path('auth/login/', auth_views.login),
-        path('auth/refresh/', auth_views.get_access_token),
+        path('auth/logout/', auth_views.logout),
+        path('auth/refresh/', auth_views.refresh_access_token),
         path('auth/user-info/', auth_views.get_user_info),
     ]))
 ]

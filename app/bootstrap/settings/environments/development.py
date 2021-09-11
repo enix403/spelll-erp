@@ -56,4 +56,13 @@ REST_FRAMEWORK = {
     ]
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_PREFLIGHT_MAX_AGE = 0
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    # allow CORS on all ports of localhost (including no port)
+    r"^http:\/\/localhost(:[0-9]+)?$",
+    # allow CORS on all ip addrs of form 127.x.y.z[:port]
+    r"^http:\/\/127\.[0-9]+\.[0-9]+\.[0-9]+(:[0-9]+)?$" 
+]
+

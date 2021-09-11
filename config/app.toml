@@ -28,5 +28,4 @@ port = "$DB_PORT"
 
 [runtime]
 debug = "$APP_DEBUG"
-
 force_serve_static_files = "$FORCE_SERVE_STATIC_FILES"

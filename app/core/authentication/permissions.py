@@ -9,16 +9,19 @@ from app.models.auth import AppUser
 from app.utils import httpcodes, to_int
 
 from .helpers import ContextGenerator
-from .token import decode_token
+from .token import decode_token, TokenDecodeResult
 from .traits import SimpleTraitCollection
 
 class PermissionGate:
     _authz_policy: ClassVar[AuthorizationPolicy]
-    _exception_obj: ClassVar[Exception]
+    _exception_obj: Exception
 
     def __init__(self, request):
         self.user = self._load_user(request)
         self._gate = AuthzGate(self._authz_policy, SimpleTraitCollection(self.user))
+
+    def set_current_exception(self, exp: Exception):
+        self._exception_obj = exp
 
     def get_user(self):
         return self.user
@@ -46,6 +49,12 @@ class ApiPermissionGate(PermissionGate):
     _authz_policy = AclAuthorizationPolicy()
     _exception_obj = ApiException("Permission Denied", code=httpcodes.HTTP_403_FORBIDDEN)
 
+    _invalid_token = ApiException("Permission Denied: Invalid Token", code=httpcodes.HTTP_403_FORBIDDEN)
+    _expired_token = ApiException("Permission Denied: Expired Token", code=httpcodes.HTTP_403_FORBIDDEN)
+    _user_not_found = ApiException("Permission Denied: User not found", code=httpcodes.HTTP_403_FORBIDDEN)
+
+
+    # make sure it does not contain a whitespace
     _TOKEN_PREFIX = 'Bearer'
 
     @classmethod
@@ -58,11 +67,28 @@ class ApiPermissionGate(PermissionGate):
 
 
     def _load_user(self, request: ApiRequest) -> Optional[AppUser]:
-        payload = decode_token(self.get_token(request.META.get('HTTP_AUTHORIZATION', '')))
-        if payload is None:
+        token = self.get_token(request.META.get('HTTP_AUTHORIZATION', ''))
+
+        # If no token is provided, show the regular 'permission denied' (default) error message
+        if not token:
             return None
 
+        decode_result = decode_token(token)
+
+        # However if a token IS provided, decode it and if decoding failed, tell the client the reason
+        # for decode failure (whether it was expired or invalid)
+        if not decode_result.success:
+            if decode_result.fail_reason == TokenDecodeResult.FailureReason.EXPIRED:
+                self.set_current_exception(self._expired_token)
+            else:
+                self.set_current_exception(self._invalid_token)
+            return None
+
+        payload = decode_result.payload
+
+        # This is not an access token. Show 'invalid token' error message
         if payload['tk_type'] != 'acs':
+            self.set_current_exception(self._invalid_token)
             return None
 
         userid: int = to_int(payload.get('userid', 0))
@@ -70,6 +96,8 @@ class ApiPermissionGate(PermissionGate):
         try:
             return AppUser.objects.filter(pk=userid).get()
         except AppUser.DoesNotExist:
+            # User not found, tell the client
+            self.set_current_exception(self._user_not_found)
             return None
 
 
